@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 
 function Home() {
-  const [selectedFile, setSelectedFile] = useState();
-  const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
@@ -14,26 +12,7 @@ function Home() {
     document.body.appendChild(script);
   }, []);
 
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview('');
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
-
   const onSelectFile = (e: any) => {
-    setLoading(true);
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined);
-      return;
-    }
-
-    setSelectedFile(e.target.files[0]);
     window.handleImageInput(e);
 
     setTimeout(function () {

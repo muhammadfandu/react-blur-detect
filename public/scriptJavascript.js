@@ -40,7 +40,7 @@ function readImageFile(rawFile) {
 
 function showScore(score) {
   finalScore = score;
-  blurScore.innerHTML = 'Score: ' + score.avg_edge_width_perc.toFixed(2);
+  blurScore.innerHTML = 'Score: ' + score.avg_edge_width_perc.toFixed(2) + ' | ';
   // console.log('Detail blur score:', score);
   document.querySelector('#calculation_time').innerHTML =
     'Calculation time: ' + ((Date.now() - calculationTime) / 1000).toFixed(3) + ' sec';

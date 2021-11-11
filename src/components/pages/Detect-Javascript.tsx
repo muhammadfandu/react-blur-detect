@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 
 function DetectJavascript() {
-  const [selectedFile, setSelectedFile] = useState();
-  const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState('');
 
@@ -14,26 +12,9 @@ function DetectJavascript() {
     document.body.appendChild(script);
   }, []);
 
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview('');
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
-
   const onSelectFile = (e: any) => {
     setLoading(true);
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined);
-      return;
-    }
 
-    setSelectedFile(e.target.files[0]);
     window.handleImageInput(e);
 
     setTimeout(function () {
@@ -53,8 +34,6 @@ function DetectJavascript() {
       <hr />
       <div className="d-flex align-items-center m-5">
         <div>
-          <input type="file" onChange={onSelectFile} />
-
           {loading ? (
             <div className="d-flex align-items-center m-5">
               <strong>Loading...</strong>
@@ -64,12 +43,15 @@ function DetectJavascript() {
             <div></div>
           )}
           <div>
-            <br />
             <h4>{result}</h4>
-            <span id="blur_score"></span> <span> | </span>
+            <span id="blur_score"></span>
             <span id="calculation_time"></span>
-            <canvas id="canvas"></canvas>
           </div>
+          <input type="file" className="form-control my-2" onChange={onSelectFile} />
+
+          <br />
+
+          <canvas id="canvas"></canvas>
         </div>
       </div>
     </div>
