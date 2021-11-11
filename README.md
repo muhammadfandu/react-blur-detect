@@ -1,3 +1,8 @@
+# Credits
+
+Using blur detection from [Inspector Bokeh](https://github.com/timotgl/inspector-bokeh). \
+Wrapped in react.js and typescript with bootstrap.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
