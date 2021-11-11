@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "public/script.js"]
+  "include": ["src", "public/scriptJavascript.js", "public/scriptOpenCv.js"]
 }

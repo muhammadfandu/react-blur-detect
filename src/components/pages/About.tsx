@@ -24,6 +24,13 @@ function About() {
           )
         </li>
         <li className="list-group-item">
+          JS Blur Image Detection (
+          <a rel="noreferrer" target="_blank" href="https://github.com/rahullahoria/js-blur-image-detection">
+            https://github.com/rahullahoria/js-blur-image-detection
+          </a>
+          )
+        </li>
+        <li className="list-group-item">
           React.js (
           <a rel="noreferrer" target="_blank" href="https://reactjs.org/">
             Ref

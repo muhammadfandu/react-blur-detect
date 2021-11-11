@@ -8,7 +8,7 @@ function Home() {
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'script.js';
+    script.src = 'scriptJavascript.js';
     script.async = true;
 
     document.body.appendChild(script);

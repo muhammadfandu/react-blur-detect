@@ -1,6 +1,7 @@
 # Credits
 
 Using blur detection from [Inspector Bokeh](https://github.com/timotgl/inspector-bokeh). \
+Using blur detection from [js-blur-image-detection](https://github.com/rahullahoria/js-blur-image-detection). \
 Wrapped in react.js and typescript with bootstrap.
 
 # Getting Started with Create React App

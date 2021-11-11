@@ -36,6 +36,12 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      function onOpenCvReady() {
+        console.log('OpenCV.js is ready.');
+      }
+    </script>
     <script src="dist/measure_blur.js"></script>
+    <script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
   </body>
 </html>

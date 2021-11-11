@@ -13,6 +13,8 @@ class NavigationBar extends Component<NavigationBarProps> {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto"></Nav>
             <Nav>
+              <Nav.Link href="/detect-javascript">Javascript</Nav.Link>
+              <Nav.Link href="/detect-opencv">OpenCV</Nav.Link>
               <Nav.Link href="/about">About</Nav.Link>
             </Nav>
           </Navbar.Collapse>
