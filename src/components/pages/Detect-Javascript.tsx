@@ -30,7 +30,9 @@ function DetectJavascript() {
 
   return (
     <div className="container mt-4">
-      <h1>Detect Blurred Image</h1>
+      <h1>
+        Detect Blurred Image <small>(Javascript Inspector Bokeh Lib)</small>
+      </h1>
       <hr />
       <div className="d-flex align-items-center m-5">
         <div>

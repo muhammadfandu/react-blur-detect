@@ -1,54 +1,21 @@
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'scriptJavascript.js';
-    script.async = true;
-
-    document.body.appendChild(script);
-  }, []);
-
-  const onSelectFile = (e: any) => {
-    window.handleImageInput(e);
-
-    setTimeout(function () {
-      setLoading(false);
-
-      if (parseFloat(window.finalScore.avg_edge_width_perc.toFixed(2)) > 0.5) {
-        setResult('Conclusion: Image is blur');
-      } else {
-        setResult('Conclusion: Image is not blur');
-      }
-    }, 1000);
-  };
-
   return (
     <div className="container mt-4">
       <h1>Detect Blurred Image</h1>
       <hr />
-      <div className="d-flex align-items-center m-5">
-        <div>
-          <input type="file" onChange={onSelectFile} />
 
-          {loading ? (
-            <div className="d-flex align-items-center m-5">
-              <strong>Loading...</strong>
-              <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
-            </div>
-          ) : (
-            <div></div>
-          )}
-          <div>
-            <br />
-            <h4>{result}</h4>
-            <span id="blur_score"></span> <span> | </span>
-            <span id="calculation_time"></span>
-            <canvas id="canvas"></canvas>
-          </div>
+      <div className="row">
+        <div className="col-md-12">
+          <h4>Please choose from these blur detection methods:</h4>
+
+          <Link to="/detect-javascript" className="btn btn-lg btn-primary me-2">
+            Javascript
+          </Link>
+          <Link to="/detect-opencv" className="btn btn-lg btn-secondary">
+            OpenCV
+          </Link>
         </div>
       </div>
     </div>

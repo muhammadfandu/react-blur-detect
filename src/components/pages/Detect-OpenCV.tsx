@@ -11,7 +11,9 @@ function DetectOpenCV() {
 
   return (
     <div className="container mt-4">
-      <h1>Detect Blurred Image using OpenCV</h1>
+      <h1>
+        Detect Blurred Image <small>(OpenCV.js)</small>
+      </h1>
       <hr />
       {/* <p id="status">OpenCV.js is loading...</p> */}
       <div className="d-flex align-items-center m-5">
