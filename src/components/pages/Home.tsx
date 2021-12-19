@@ -1,43 +1,25 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-export interface Preview {
+export interface Image {
   name: string;
   preview: string;
 }
 
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16,
-} as React.CSSProperties;
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box',
-} as React.CSSProperties;
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden',
-} as React.CSSProperties;
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%',
-} as React.CSSProperties;
+export interface Score {
+  avg_edge_width: number;
+  avg_edge_width_perc: number;
+  height: number;
+  num_edges: number;
+  width: number;
+}
 
 function Home() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
+  const [score, setScore] = useState<Score[]>([]);
+  const [thumbs, setThumbs] = useState<ReactElement[]>([]);
+
   useEffect(() => {
     const script1 = document.createElement('script');
     script1.src = 'scriptJavascript.js';
@@ -50,13 +32,11 @@ function Home() {
     document.body.appendChild(script2);
   }, []);
 
-  const [previews, setPreviews] = useState<Preview[]>([]);
-  const [result, setResult] = useState('');
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     maxFiles: 4,
     onDrop: (files) => {
-      setPreviews(
+      setImages(
         files.map((file) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
@@ -64,30 +44,60 @@ function Home() {
         )
       );
 
+      const thumb = images.map((file, index) => (
+        <div key={file.name} className="card my-2 p-2">
+          <div className="row">
+            <div className="col-md-4">
+              <div className="thumb">
+                <div>
+                  <img src={file.preview} className="img" />
+                </div>
+              </div>
+            </div>
+            <div className="col-md-8 py-4">
+              <h4>{file.name}</h4>
+              <span>Blur</span>
+              <br />
+              {/* <span>Score: {window.scores[index].avg_edge_width_perc.toFixed(2)}</span> */}
+              <span>Score: {score[index].avg_edge_width_perc.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      ));
+
+      setThumbs(thumb);
+
       window.scores = [];
       files.forEach((file) => {
-        console.log('handleImageInput', file);
         window.handleImageInput(file);
       });
     },
   });
 
-  const thumbs = previews.map((file) => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img src={file.preview} style={img} />
-      </div>
-    </div>
-  ));
+  const process = () => {};
+
+  useEffect(
+    () => () => {
+      console.log('files', files);
+      console.log('scores updated');
+      setScore(window.scores);
+
+      console.log('score', score);
+      console.log('images', images);
+      console.log('thumbs', thumbs);
+    },
+    [window.scores]
+  );
 
   useEffect(
     () => () => {
       // Make sure to revoke the data uris to avoid memory leaks
-      previews.forEach((file) => {
-        URL.revokeObjectURL(file.preview);
+
+      images.forEach((file) => {
+        // URL.revokeObjectURL(file.preview);
       });
     },
-    [previews]
+    [images]
   );
 
   return (
@@ -96,7 +106,7 @@ function Home() {
       <hr />
 
       <div className="row">
-        <div className="col-md-12">Please upload image (max 4 images)</div>
+        <div className="col-md-12">Please choose the image (max 4 images)</div>
       </div>
 
       <div className="row">
@@ -106,11 +116,11 @@ function Home() {
             <p>Drag 'n' drop some files here, or click to select files</p>
           </div>
 
-          <aside style={thumbsContainer}>{thumbs}</aside>
+          <aside className="thumbs-container">{thumbs}</aside>
         </div>
       </div>
 
-      <div className="row">
+      <div className="row hidden">
         <img id="imageSrc" alt="Please choose a file" />
         <canvas id="canvas"></canvas>
       </div>
