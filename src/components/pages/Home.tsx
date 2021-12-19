@@ -1,6 +1,5 @@
-import { ReactNode, useEffect, useState } from 'react';
-import { useDropzone, FileWithPath } from 'react-dropzone';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 export interface Preview {
   name: string;
@@ -40,15 +39,20 @@ const img = {
 
 function Home() {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'scriptJavascript.js';
-    script.async = true;
+    const script1 = document.createElement('script');
+    script1.src = 'scriptJavascript.js';
+    script1.async = true;
+    document.body.appendChild(script1);
 
-    document.body.appendChild(script);
+    const script2 = document.createElement('script');
+    script2.src = 'scriptOpenCv.js';
+    script2.async = true;
+    document.body.appendChild(script2);
   }, []);
+
   const [previews, setPreviews] = useState<Preview[]>([]);
   const [result, setResult] = useState('');
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     maxFiles: 4,
     onDrop: (files) => {
@@ -59,15 +63,14 @@ function Home() {
           })
         )
       );
+
+      window.scores = [];
+      files.forEach((file) => {
+        console.log('handleImageInput', file);
+        window.handleImageInput(file);
+      });
     },
   });
-
-  const files = (acceptedFiles: FileWithPath[]): ReactNode =>
-    acceptedFiles.map((file) => (
-      <li key={file.path}>
-        {file.path} - {file.size} bytes
-      </li>
-    ));
 
   const thumbs = previews.map((file) => (
     <div style={thumb} key={file.name}>
@@ -82,20 +85,9 @@ function Home() {
       // Make sure to revoke the data uris to avoid memory leaks
       previews.forEach((file) => {
         URL.revokeObjectURL(file.preview);
-
-        console.log('handleImageInput', file);
-
-        window.handleImageInput(file);
-        setTimeout(function () {
-          if (parseFloat(window.finalScore.avg_edge_width_perc.toFixed(2)) > 0.5) {
-            setResult('Conclusion: Image is blur');
-          } else {
-            setResult('Conclusion: Image is not blur');
-          }
-        }, 1000);
       });
     },
-    [files]
+    [previews]
   );
 
   return (
@@ -113,34 +105,14 @@ function Home() {
             <input {...getInputProps()} />
             <p>Drag 'n' drop some files here, or click to select files</p>
           </div>
-          {/* <aside>
-            <h4>Files</h4>
-            <ul>{files(acceptedFiles)}</ul>
-          </aside> */}
+
           <aside style={thumbsContainer}>{thumbs}</aside>
         </div>
       </div>
 
       <div className="row">
-        <div className="col-md-12">
-          <h4>Please choose from these blur detection methods:</h4>
-
-          <Link to="/detect-javascript" className="btn btn-lg btn-primary me-2">
-            Javascript
-          </Link>
-          <Link to="/detect-opencv" className="btn btn-lg btn-secondary">
-            OpenCV
-          </Link>
-        </div>
-
-        <div className="row">
-          <div>
-            <h4>{result}</h4>
-            <span id="blur_score"></span>
-            <span id="calculation_time"></span>
-          </div>
-          <canvas id="canvas"></canvas>
-        </div>
+        <img id="imageSrc" alt="Please choose a file" />
+        <canvas id="canvas"></canvas>
       </div>
     </div>
   );

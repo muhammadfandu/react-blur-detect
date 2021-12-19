@@ -10,6 +10,7 @@ var finalScore = {
   num_edges: 0,
   width: 0,
 };
+var scores = [];
 
 measureBlur.setup({
   workerURL: 'dist/measure_blur_worker.js',
@@ -40,14 +41,16 @@ function readImageFile(rawFile) {
 
 function showScore(score) {
   finalScore = score;
-  blurScore.innerHTML = 'Score: ' + score.avg_edge_width_perc.toFixed(2) + ' | ';
+  scores.push(score);
+
+  console.log(scores);
+  // blurScore.innerHTML = 'Score: ' + score.avg_edge_width_perc.toFixed(2) + ' | ';
   // console.log('Detail blur score:', score);
-  document.querySelector('#calculation_time').innerHTML =
-    'Calculation time: ' + ((Date.now() - calculationTime) / 1000).toFixed(3) + ' sec';
+  // document.querySelector('#calculation_time').innerHTML =
+  // 'Calculation time: ' + ((Date.now() - calculationTime) / 1000).toFixed(3) + ' sec';
 }
 
 function handleImageInput(e) {
-  console.log('handleImageInput', e);
   var done = function (img) {
     var context = canvas.getContext('2d');
 
