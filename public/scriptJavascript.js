@@ -47,6 +47,7 @@ function showScore(score) {
 }
 
 function handleImageInput(e) {
+  console.log('handleImageInput', e);
   var done = function (img) {
     var context = canvas.getContext('2d');
 
@@ -60,5 +61,5 @@ function handleImageInput(e) {
   };
   // spinner.style.display = 'block';
   calculationTime = Date.now();
-  readImageFile(e.target.files[0]).then(done, console.error);
+  readImageFile(e).then(done, console.error);
 }
