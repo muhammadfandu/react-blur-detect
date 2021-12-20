@@ -1,6 +1,6 @@
 function About() {
   return (
-    <div className="container mt-4">
+    <div className="py-4">
       <h1>Detect Blurred Image</h1>
       <hr />
       <h4>Technologies Used</h4>

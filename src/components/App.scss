@@ -28,6 +28,19 @@
   color: #61dafb;
 }
 
+.bg-main {
+  background-image: url(../images/bg-main.jpg);
+  background-size: cover;
+  min-height: 100vh;
+  min-width: 100vw;
+  z-index: -1;
+  position: fixed;
+}
+
+.bg-white2 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

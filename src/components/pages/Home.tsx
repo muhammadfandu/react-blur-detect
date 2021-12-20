@@ -15,7 +15,6 @@ export interface Score {
 }
 
 function Home() {
-  const [files, setFiles] = useState<File[]>([]);
   const [images, setImages] = useState<Image[]>([]);
   const [score, setScore] = useState<Score[]>([]);
   const [thumbs, setThumbs] = useState<ReactElement[]>([]);
@@ -44,29 +43,6 @@ function Home() {
         )
       );
 
-      const thumb = images.map((file, index) => (
-        <div key={file.name} className="card my-2 p-2">
-          <div className="row">
-            <div className="col-md-4">
-              <div className="thumb">
-                <div>
-                  <img src={file.preview} className="img" />
-                </div>
-              </div>
-            </div>
-            <div className="col-md-8 py-4">
-              <h4>{file.name}</h4>
-              <span>Blur</span>
-              <br />
-              {/* <span>Score: {window.scores[index].avg_edge_width_perc.toFixed(2)}</span> */}
-              <span>Score: {score[index].avg_edge_width_perc.toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
-      ));
-
-      setThumbs(thumb);
-
       window.scores = [];
       files.forEach((file) => {
         window.handleImageInput(file);
@@ -74,39 +50,82 @@ function Home() {
     },
   });
 
-  const process = () => {};
-
   useEffect(
     () => () => {
-      console.log('files', files);
-      console.log('scores updated');
-      setScore(window.scores);
+      setTimeout(() => {
+        if (window.scores.length > 0) {
+          setScore(window.scores);
 
-      console.log('score', score);
-      console.log('images', images);
-      console.log('thumbs', thumbs);
+          setThumbs(
+            images.map((file, index) => (
+              <div key={file.name} className="card my-2 p-2">
+                <div className="row">
+                  <div className="col-md-4">
+                    <div className="thumb">
+                      <div>
+                        <img src={file.preview} className="img" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-8 py-4">
+                    <h4> </h4>
+                    <table className="padding-4">
+                      <tr>
+                        <td width={'120px'}>
+                          <h4>
+                            <small>Result </small>{' '}
+                          </h4>
+                        </td>
+                        <td width={'20px'}></td>
+                        <td>
+                          <h4 className="text-bold">
+                            {window.scores[index].avg_edge_width_perc.toFixed(2) > 0.5 ? 'Blur' : 'Not Blur'}
+                          </h4>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width={'120px'}>File Name</td>
+                        <td width={'20px'}>:</td>
+                        <td>{file.name}</td>
+                      </tr>
+                      <tr>
+                        <td>Score</td>
+                        <td>:</td>
+                        <td>{window.scores[index].avg_edge_width_perc.toFixed(2)}</td>
+                      </tr>
+                      <tr>
+                        <td>Reason</td>
+                        <td>:</td>
+                        <td></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            ))
+          );
+        }
+      }, 1000);
     },
-    [window.scores]
+    [window.scores, images]
   );
 
   useEffect(
     () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
-
       images.forEach((file) => {
-        // URL.revokeObjectURL(file.preview);
+        URL.revokeObjectURL(file.preview);
       });
     },
     [images]
   );
 
   return (
-    <div className="container mt-4">
+    <div className="p-4">
       <h1>ASIC - Application for SEM Image Checking</h1>
       <hr />
 
       <div className="row">
-        <div className="col-md-12">Please choose the image (max 4 images)</div>
+        <div className="col-md-12 text-bold">Please choose the image (max 4 images)</div>
       </div>
 
       <div className="row">

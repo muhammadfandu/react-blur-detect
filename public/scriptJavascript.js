@@ -41,9 +41,8 @@ function readImageFile(rawFile) {
 
 function showScore(score) {
   finalScore = score;
-  scores.push(score);
+  scores.unshift(score);
 
-  console.log(scores);
   // blurScore.innerHTML = 'Score: ' + score.avg_edge_width_perc.toFixed(2) + ' | ';
   // console.log('Detail blur score:', score);
   // document.querySelector('#calculation_time').innerHTML =

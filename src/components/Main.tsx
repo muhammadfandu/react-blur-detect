@@ -8,8 +8,10 @@ import Home from './pages/Home';
 function Main() {
   return (
     <div>
+      <div className="bg-main"></div>
+
       <NavigationBar />
-      <div className="container">
+      <div className="container bg-white2">
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/detect-javascript" element={<DetectJavascript />}></Route>
