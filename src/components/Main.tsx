@@ -11,7 +11,7 @@ function Main() {
       <div className="bg-main"></div>
 
       <NavigationBar />
-      <div className="container bg-white2">
+      <div className="container bg-white2 bg-mobile">
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/detect-javascript" element={<DetectJavascript />}></Route>

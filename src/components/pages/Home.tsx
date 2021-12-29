@@ -1,5 +1,8 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateThreshold } from '../../redux/actions';
+import { ApplicationState } from '../../redux/interfaces';
 
 export interface Image {
   name: string;
@@ -15,8 +18,11 @@ export interface Score {
 }
 
 function Home() {
+  const dispatch = useDispatch();
+  const blurThreshold1 = useSelector<ApplicationState, ApplicationState['threshold1']>((state) => state.threshold1);
+
+  const [loading, setLoading] = useState();
   const [images, setImages] = useState<Image[]>([]);
-  const [score, setScore] = useState<Score[]>([]);
   const [thumbs, setThumbs] = useState<ReactElement[]>([]);
 
   useEffect(() => {
@@ -53,9 +59,9 @@ function Home() {
   useEffect(
     () => () => {
       setTimeout(() => {
+        // dispatch(updateThreshold(0.5));
+        // console.log(blurThreshold1);
         if (window.scores.length > 0) {
-          setScore(window.scores);
-
           setThumbs(
             images.map((file, index) => (
               <div key={file.name} className="card my-2 p-2">
@@ -63,41 +69,43 @@ function Home() {
                   <div className="col-md-4">
                     <div className="thumb">
                       <div>
-                        <img src={file.preview} className="img" />
+                        <img src={file.preview} className="img" alt="preview" />
                       </div>
                     </div>
                   </div>
                   <div className="col-md-8 py-4">
                     <h4> </h4>
                     <table className="padding-4">
-                      <tr>
-                        <td width={'120px'}>
-                          <h4>
-                            <small>Result </small>{' '}
-                          </h4>
-                        </td>
-                        <td width={'20px'}></td>
-                        <td>
-                          <h4 className="text-bold">
-                            {window.scores[index].avg_edge_width_perc.toFixed(2) > 0.5 ? 'Blur' : 'Not Blur'}
-                          </h4>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td width={'120px'}>File Name</td>
-                        <td width={'20px'}>:</td>
-                        <td>{file.name}</td>
-                      </tr>
-                      <tr>
-                        <td>Score</td>
-                        <td>:</td>
-                        <td>{window.scores[index].avg_edge_width_perc.toFixed(2)}</td>
-                      </tr>
-                      <tr>
-                        <td>Reason</td>
-                        <td>:</td>
-                        <td></td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <td width={'120px'}>
+                            <h4>
+                              <small>Result </small>{' '}
+                            </h4>
+                          </td>
+                          <td width={'20px'}></td>
+                          <td>
+                            <h4 className="text-bold">
+                              {window.scores[index].avg_edge_width_perc.toFixed(2) > 0.5 ? 'Blur' : 'Not Blur'}
+                            </h4>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td width={'120px'}>File Name</td>
+                          <td width={'20px'}>:</td>
+                          <td>{file.name}</td>
+                        </tr>
+                        <tr>
+                          <td>Score</td>
+                          <td>:</td>
+                          <td>{window.scores[index].avg_edge_width_perc.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td>Reason</td>
+                          <td>:</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -134,6 +142,8 @@ function Home() {
             <input {...getInputProps()} />
             <p>Drag 'n' drop some files here, or click to select files</p>
           </div>
+
+          <div></div>
 
           <aside className="thumbs-container">{thumbs}</aside>
         </div>
