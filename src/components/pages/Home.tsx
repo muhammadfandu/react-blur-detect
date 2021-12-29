@@ -1,8 +1,9 @@
 import { ReactElement, useEffect, useState } from 'react';
+import { Button, Modal, Spinner } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateThreshold } from '../../redux/actions';
+import { useSelector } from 'react-redux';
 import { ApplicationState } from '../../redux/interfaces';
+import ConfigModal from './ConfigModal';
 
 export interface Image {
   name: string;
@@ -18,12 +19,16 @@ export interface Score {
 }
 
 function Home() {
-  const dispatch = useDispatch();
-  const blurThreshold1 = useSelector<ApplicationState, ApplicationState['threshold1']>((state) => state.threshold1);
-
-  const [loading, setLoading] = useState();
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [thumbs, setThumbs] = useState<ReactElement[]>([]);
+  const blurThreshold1 = useSelector<ApplicationState, ApplicationState['threshold1']>((state) => state.threshold1);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const showLoading = () => setLoading(true);
+  const hideLoading = () => setLoading(false);
 
   useEffect(() => {
     const script1 = document.createElement('script');
@@ -41,6 +46,7 @@ function Home() {
     accept: 'image/*',
     maxFiles: 4,
     onDrop: (files) => {
+      showLoading();
       setImages(
         files.map((file) =>
           Object.assign(file, {
@@ -59,9 +65,8 @@ function Home() {
   useEffect(
     () => () => {
       setTimeout(() => {
-        // dispatch(updateThreshold(0.5));
-        // console.log(blurThreshold1);
         if (window.scores.length > 0) {
+          hideLoading();
           setThumbs(
             images.map((file, index) => (
               <div key={file.name} className="card my-2 p-2">
@@ -86,7 +91,9 @@ function Home() {
                           <td width={'20px'}></td>
                           <td>
                             <h4 className="text-bold">
-                              {window.scores[index].avg_edge_width_perc.toFixed(2) > 0.5 ? 'Blur' : 'Not Blur'}
+                              {window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1
+                                ? 'Blur'
+                                : 'Not Blur'}
                             </h4>
                           </td>
                         </tr>
@@ -115,7 +122,7 @@ function Home() {
         }
       }, 1000);
     },
-    [window.scores, images]
+    [window.scores, images, blurThreshold1]
   );
 
   useEffect(
@@ -133,7 +140,12 @@ function Home() {
       <hr />
 
       <div className="row">
-        <div className="col-md-12 text-bold">Please choose the image (max 4 images)</div>
+        <div className="col-md-11 col-xs-12 text-bold">Please choose the image (max 4 images)</div>
+        <div className="col-md-1 col-xs-12 text-bold">
+          <Button variant="primary" onClick={handleShow}>
+            Settings
+          </Button>
+        </div>
       </div>
 
       <div className="row">
@@ -143,9 +155,13 @@ function Home() {
             <p>Drag 'n' drop some files here, or click to select files</p>
           </div>
 
-          <div></div>
+          {loading && (
+            <div className="center-content">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          )}
 
-          <aside className="thumbs-container">{thumbs}</aside>
+          {!loading && <aside className="thumbs-container">{thumbs}</aside>}
         </div>
       </div>
 
@@ -153,6 +169,10 @@ function Home() {
         <img id="imageSrc" alt="Please choose a file" />
         <canvas id="canvas"></canvas>
       </div>
+
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <ConfigModal handleClose={handleClose}></ConfigModal>
+      </Modal>
     </div>
   );
 }

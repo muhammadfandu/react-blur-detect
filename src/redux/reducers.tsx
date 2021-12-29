@@ -1,7 +1,7 @@
 import { ApplicationState } from './interfaces';
 
 const initialState = {
-  threshold1: 0,
+  threshold1: 0.5,
 };
 
 export const blurReducers = (state: ApplicationState = initialState, action: any) => {
