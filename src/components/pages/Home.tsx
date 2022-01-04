@@ -108,9 +108,30 @@ function Home() {
                           <td>{window.scores[index].avg_edge_width_perc.toFixed(2)}</td>
                         </tr>
                         <tr>
-                          <td>Reason</td>
-                          <td>:</td>
-                          <td></td>
+                          <td className="valign-top">Reason</td>
+                          <td className="valign-top">:</td>
+                          <td>
+                            The algorithm measures the width of vertical edges from the image. With a high enough
+                            contrast modification in image processing algorithm, it can be observed that edges get
+                            smoothened out and appear wider than in the original. From the submitted image, it is
+                            calculated that the average width of the edges is{' '}
+                            <b>{window.scores[index].avg_edge_width_perc.toFixed(2)}</b> and with the blur threshold set
+                            to <b>{blurThreshold1}</b>, then it is concluded that the image is{' '}
+                            <b>
+                              {window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1
+                                ? 'Blur'
+                                : 'Not Blur'}
+                            </b>
+                            . More details can be found{' '}
+                            <a
+                              rel="noreferrer"
+                              target="_blank"
+                              href="https://medium.com/dawandadev/canvas-based-blur-detection-with-javascript-8d9dc25cb7d5"
+                            >
+                              here
+                            </a>
+                            .
+                          </td>
                         </tr>
                       </tbody>
                     </table>
