@@ -1,0 +1,17 @@
+{
+  "settings": "Settings",
+  "app-lang": "Application Language",
+  "blur-score-threshold": "Blur Score Threshold",
+
+  "please-choose": "Please choose the image (max 4 images)",
+  "dragndrop": "Drag 'n' drop some files here, or click to select files",
+
+  "result": "Result",
+  "file-name": "File Name",
+  "score": "Score",
+  "reason": "Reason",
+
+  "home": "Home",
+  "about": "About",
+  "close": "Close"
+}

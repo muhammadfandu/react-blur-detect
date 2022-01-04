@@ -1,6 +1,7 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactChild, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from 'react';
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../../redux/interfaces';
 import ConfigModal from './ConfigModal';
@@ -19,11 +20,13 @@ export interface Score {
 }
 
 function Home() {
+  const { t, i18n } = useTranslation();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [thumbs, setThumbs] = useState<ReactElement[]>([]);
   const blurThreshold1 = useSelector<ApplicationState, ApplicationState['threshold1']>((state) => state.threshold1);
+  const appLanguage = useSelector<ApplicationState, ApplicationState['app_language']>((state) => state.app_language);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -40,7 +43,9 @@ function Home() {
     script2.src = 'scriptOpenCv.js';
     script2.async = true;
     document.body.appendChild(script2);
-  }, []);
+
+    i18n.changeLanguage(appLanguage);
+  }, [appLanguage, i18n]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
@@ -66,6 +71,55 @@ function Home() {
     () => () => {
       setTimeout(() => {
         if (window.scores.length > 0) {
+          let reason: (boolean | ReactChild | ReactFragment | ReactPortal | null | undefined)[] = [];
+
+          images.forEach((file, index) => {
+            if (appLanguage === 'en') {
+              reason.push(
+                <div>
+                  The algorithm measures the width of edges from the image. With a high enough contrast modification in
+                  image processing algorithm, it can be observed that edges get smoothened out and appear wider than in
+                  the original. From the submitted image, it is calculated that the average width of the edges is{' '}
+                  <b>{window.scores[index].avg_edge_width_perc.toFixed(2)}</b> and with the blur threshold set to{' '}
+                  <b>{blurThreshold1}</b>, then it is concluded that the image is{' '}
+                  <b>{window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1 ? 'Blur' : 'Not Blur'}</b>.
+                  More details can be found{' '}
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    href="https://medium.com/dawandadev/canvas-based-blur-detection-with-javascript-8d9dc25cb7d5"
+                  >
+                    here
+                  </a>
+                  .
+                </div>
+              );
+            }
+            if (appLanguage === 'id') {
+              reason.push(
+                <div>
+                  Algoritma mengukur lebar rusuk (edges) dari gambar. Dengan melakukan modifikasi kontras dalam
+                  algoritma pemrosesan gambar, dapat diobservasi rusuk (edges) dari gambar terlihat lebih halus dan
+                  lebar dari yang sebenarnya. Dari gambar yang dipilih, terhitung bahwa rata-rata lebar rusuk adalah{' '}
+                  <b>{window.scores[index].avg_edge_width_perc.toFixed(2)}</b> dan dengan batas skor blur diatur ke{' '}
+                  <b>{blurThreshold1}</b>, maka disimpulkan bahwa gambar{' '}
+                  <b>
+                    {window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1 ? 'Buram' : 'Tidak Buram'}
+                  </b>
+                  . Lebih banyak informasi dapat dilihat{' '}
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    href="https://medium.com/dawandadev/canvas-based-blur-detection-with-javascript-8d9dc25cb7d5"
+                  >
+                    disini
+                  </a>
+                  .
+                </div>
+              );
+            }
+          });
+
           hideLoading();
           setThumbs(
             images.map((file, index) => (
@@ -85,53 +139,36 @@ function Home() {
                         <tr>
                           <td width={'120px'}>
                             <h4>
-                              <small>Result </small>{' '}
+                              <small>{t('result')} </small>{' '}
                             </h4>
                           </td>
                           <td width={'20px'}></td>
                           <td>
                             <h4 className="text-bold">
                               {window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1
-                                ? 'Blur'
-                                : 'Not Blur'}
+                                ? appLanguage === 'en'
+                                  ? 'Blur'
+                                  : 'Buram'
+                                : appLanguage === 'en'
+                                ? 'Not Blur'
+                                : 'Tidak Buram'}
                             </h4>
                           </td>
                         </tr>
                         <tr>
-                          <td width={'120px'}>File Name</td>
+                          <td width={'120px'}>{t('file-name')}</td>
                           <td width={'20px'}>:</td>
                           <td>{file.name}</td>
                         </tr>
                         <tr>
-                          <td>Score</td>
+                          <td>{t('score')}</td>
                           <td>:</td>
                           <td>{window.scores[index].avg_edge_width_perc.toFixed(2)}</td>
                         </tr>
                         <tr>
-                          <td className="valign-top">Reason</td>
+                          <td className="valign-top">{t('reason')}</td>
                           <td className="valign-top">:</td>
-                          <td>
-                            The algorithm measures the width of vertical edges from the image. With a high enough
-                            contrast modification in image processing algorithm, it can be observed that edges get
-                            smoothened out and appear wider than in the original. From the submitted image, it is
-                            calculated that the average width of the edges is{' '}
-                            <b>{window.scores[index].avg_edge_width_perc.toFixed(2)}</b> and with the blur threshold set
-                            to <b>{blurThreshold1}</b>, then it is concluded that the image is{' '}
-                            <b>
-                              {window.scores[index].avg_edge_width_perc.toFixed(2) > blurThreshold1
-                                ? 'Blur'
-                                : 'Not Blur'}
-                            </b>
-                            . More details can be found{' '}
-                            <a
-                              rel="noreferrer"
-                              target="_blank"
-                              href="https://medium.com/dawandadev/canvas-based-blur-detection-with-javascript-8d9dc25cb7d5"
-                            >
-                              here
-                            </a>
-                            .
-                          </td>
+                          <td>{reason[index]}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -143,7 +180,7 @@ function Home() {
         }
       }, 1000);
     },
-    [window.scores, images, blurThreshold1]
+    [window.scores, images, blurThreshold1, appLanguage]
   );
 
   useEffect(
@@ -161,10 +198,10 @@ function Home() {
       <hr />
 
       <div className="row">
-        <div className="col-md-11 col-xs-12 text-bold">Please choose the image (max 4 images)</div>
-        <div className="col-md-1 col-xs-12 text-bold">
-          <Button variant="primary" onClick={handleShow}>
-            Settings
+        <div className="col-md-11 col-xs-12 ">{t('please-choose')}</div>
+        <div className="col-md-1 col-xs-12 ">
+          <Button variant="primary2" onClick={handleShow}>
+            {t('settings')}
           </Button>
         </div>
       </div>
@@ -173,7 +210,7 @@ function Home() {
         <div className="col-md-12">
           <div {...getRootProps({ className: 'baseStyle my-4' })}>
             <input {...getInputProps()} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <p>{t('dragndrop')}</p>
           </div>
 
           {loading && (

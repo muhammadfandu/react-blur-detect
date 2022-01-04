@@ -59,6 +59,17 @@
   }
 }
 
+.bg-primary2 {
+  --bs-bg-opacity: 1;
+  background-color: #093697 !important;
+}
+
+.btn-primary2 {
+  color: #fff !important;
+  background-color: #093697 !important;
+  border-color: #093697 !important;
+}
+
 .baseStyle {
   flex: 1;
   display: flex;
@@ -116,4 +127,8 @@
 
 .valign-top {
   vertical-align: text-top;
+}
+
+.text-bold {
+  font-weight: 800;
 }

@@ -1,0 +1,17 @@
+{
+  "settings": "Pengaturan",
+  "app-lang": "Bahasa Aplikasi",
+  "blur-score-threshold": "Batas Skor Blur",
+
+  "please-choose": "Silakan pilih gambar (maksimum 4 gambar)",
+  "dragndrop": "Tarik dan lepaskan gambar disini, atau klik untuk memilih gambar",
+
+  "result": "Hasil",
+  "file-name": "Nama File",
+  "score": "Skor",
+  "reason": "Alasan",
+
+  "home": "Beranda",
+  "about": "Tentang",
+  "close": "Tutup"
+}
